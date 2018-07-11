@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\local_user\\Desktop\\AwesomeProject\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi\\ic_launcher.png",
+        "source": "C:\\Users\\local_user\\Desktop\\AwesomeProject\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\local_user\\Desktop\\pf3\\PropertyFinder\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi\\ic_launcher.png",
+        "source": "C:\\Users\\local_user\\Desktop\\pf3\\PropertyFinder\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    }
+]
