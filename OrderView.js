@@ -9,6 +9,7 @@ import {
   View,
   TouchableHighlight,
   FlatList,
+  TextInput,
   Button,
   Text,
 } from 'react-native';
@@ -39,6 +40,8 @@ export default class OrderView extends Component {
       waiting_time: '',
       status: '',
       photo: '',
+      trigger_address: true,
+      trigger_status: true
     }
   }
 
@@ -50,23 +53,107 @@ export default class OrderView extends Component {
     this.setState({status: order.status});
     this.setState({photo: order.photo});
   }
- 
+
+  onChangeAddressTrigger() {
+    this.state.trigger_address ?
+    this.setState({trigger_address: false}) :
+    this.setState({trigger_address: true})
+  }
+
+  onChangeAddress(event) {
+    this.setState({address: event.nativeEvent.text})
+  }
+
+  onChangeStatusTrigger() {
+    this.state.trigger_status ?
+    this.setState({trigger_status: false}) :
+    this.setState({trigger_status: true})
+  }
+
+  onChangeStatus(event) {
+    this.setState({status: event.nativeEvent.text})
+  }
+
+  onDelete() {
+    var id = this.state.id;
+    fetch('http://192.168.96.128:3000/api/delete', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    })
+      .then((response) => {
+        if(response.status == 200) {
+          this.props.navigation.navigate('Home');
+        };
+      })
+      .catch(function(error) {
+        alert('There has been a problem with your fetch operation: ' + error.message);
+      });
+  }
+
   render() {
     var order = this.props.navigation.state.params.order;
- 
+
     let img = this.state.photo == null ? null:
       <Image style={styles.thumb} source={{uri: 'data:image/png;base64,' + this.state.photo}} />
 
+    let address = this.state.trigger_address == true ?
+      <Text onPress={this.onChangeAddressTrigger.bind(this)} style={styles.address}>Адрес: {this.state.address}</Text> :
+      <View> 
+        <View style={styles.flowRight}>
+          <Text style={styles.address}>Адрес: </Text>
+          <TextInput 
+            style={styles.status} 
+            value={this.state.address} 
+            onChange={this.onChangeAddress.bind(this)}
+          />
+        </View>
+        <Button
+          onPress={this.onChangeAddressTrigger.bind(this)}
+          style={styles.searchImage}
+          title='Изменить'
+        />
+      </View>
+
+    let status = this.state.trigger_status == true ?
+      <View style={styles.flowRight}>
+        <Text onPress={this.onChangeStatusTrigger.bind(this)} style={styles.status}>Статус: {this.state.status}</Text>
+        {img}
+      </View> :
+      <View> 
+        <View style={styles.flowRight}>
+          <Text style={styles.status}>Статус: </Text>
+          <TextInput 
+            style={styles.status} 
+            value={this.state.status}
+            onChange={this.onChangeStatus.bind(this)}
+          />
+          {img}
+        </View>
+        <Button
+          onPress={this.onChangeStatusTrigger.bind(this)}
+          style={styles.searchImage}
+          title='Изменить'
+        />
+      </View>
+
     return (
       <ScrollView>
+        <Button
+          onPress={this.onDelete.bind(this)}
+          style={styles.deleteOrder}
+          title='Удалить заказ'
+        />
         <View style={styles.container}>
           <Text style={styles.id}>id товара: {this.state.id}</Text>
-          <Text style={styles.address}>Адрес: {this.state.address}</Text>
+          {address}
           <Text style={styles.waitingTime}>Время доставки: {this.state.waiting_time} часа(ов)</Text>
-          <View style={styles.flowRight}>
-            <Text style={styles.status}>Статус: {this.state.status}</Text>
-            {img}
-          </View>
+          {status}
         </View>
         <Button
           onPress={this.show.bind(this)}

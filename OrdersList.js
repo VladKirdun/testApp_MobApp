@@ -68,6 +68,14 @@ export default class OrdersList extends Component<{}> {
         });
   }
 
+  componentWillUpdate() {
+    fetch('http://192.168.96.128:3000/api/')
+      .then((response) => response.json())
+      .then((responseJson) => {
+          this.setState({data: responseJson});
+        });
+  }
+
   _keyExtractor = (item, index) => index.toString();
 
   _renderItem = ({item, index}) => (
