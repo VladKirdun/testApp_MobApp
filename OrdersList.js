@@ -56,24 +56,46 @@ export default class OrdersList extends Component<{}> {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       data: '',
     };
   }
 
   componentWillMount() {
     fetch('http://192.168.96.128:3000/api/')
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json()
+      })
       .then((responseJson) => {
-          this.setState({data: responseJson});
-        });
+        this.setState({data: responseJson});
+        return true
+      });
   }
 
-  componentWillUpdate() {
-    fetch('http://192.168.96.128:3000/api/')
-      .then((response) => response.json())
+  // componentWillUpdate() {
+  //   fetch('http://192.168.96.128:3000/api/')
+  //     .then((response) => {
+  //       return response.json()
+  //     })
+  //     .then((responseJson) => {
+  //       this.setState({data: responseJson});
+  //       return true
+  //     });
+  // }
+
+  onChangeId(event) {
+    this.setState({id: event.nativeEvent.text})
+  }
+
+  onSearchOrders() {
+    fetch('http://192.168.96.128:3000/api?id=' + this.state.id)
+      .then((response) => {
+        return response.json()
+      })
       .then((responseJson) => {
-          this.setState({data: responseJson});
-        });
+        this.setState({data: responseJson});
+        return true
+      });
   }
 
   _keyExtractor = (item, index) => index.toString();
@@ -96,11 +118,25 @@ export default class OrdersList extends Component<{}> {
     const params = this.state.data;
     
     return (
-      <FlatList
-        data={params}
-        keyExtractor={this._keyExtractor}
-        renderItem={this._renderItem}
-      />
+      <View>
+        <View style={styles.flowRight}>
+          <TextInput 
+            style={styles.status} 
+            value={this.state.id} 
+            onChange={this.onChangeId.bind(this)}
+          />
+          <Button
+            onPress={this.onSearchOrders.bind(this)}
+            style={styles.searchImage}
+            title='Поиск'
+          />
+        </View>
+        <FlatList
+          data={params}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+        />
+      </View>
     );
   }
 }

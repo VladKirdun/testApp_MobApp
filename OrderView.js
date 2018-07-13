@@ -73,7 +73,7 @@ export default class OrderView extends Component {
       alert(`ERROR(${err.code}): ${err.message}`);
     }
 
-    navigator.geolocation.getCurrentPosition(success.bind(this), error, options);
+    navigator.geolocation.getCurrentPosition(success.bind(this), error.bind(this), options);
   }
 
   onChangeAddressTrigger() {
@@ -222,12 +222,15 @@ export default class OrderView extends Component {
             photo: photo,
           }),
         })
-          .then((response) => response.json())
+          .then(response => {
+            return response.json()
+          })
           .then((responseJson) => {
-              this.setState({waiting_time: responseJson.waiting_time});
-              this.setState({status: responseJson.status});
-              this.setState({photo: responseJson.photo});
-            });
+            this.setState({waiting_time: responseJson.waiting_time});
+            this.setState({status: responseJson.status});
+            this.setState({photo: responseJson.photo});
+            return true
+          });
       }
     });
   }
