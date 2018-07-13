@@ -41,7 +41,9 @@ export default class OrderView extends Component {
       status: '',
       photo: '',
       trigger_address: true,
-      trigger_status: true
+      trigger_status: true,
+      latitude: '',
+      longitude: ''
     }
   }
 
@@ -52,6 +54,26 @@ export default class OrderView extends Component {
     this.setState({waiting_time: order.waiting_time});
     this.setState({status: order.status});
     this.setState({photo: order.photo});
+  }
+
+  onGetGeolocation() {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+
+    function success(pos) {
+      var crd = pos.coords;
+      this.setState({latitude: crd.latitude});
+      this.setState({longitude: crd.longitude});
+    }
+
+    function error(err) {
+      alert(`ERROR(${err.code}): ${err.message}`);
+    }
+
+    navigator.geolocation.getCurrentPosition(success.bind(this), error, options);
   }
 
   onChangeAddressTrigger() {
@@ -165,6 +187,7 @@ export default class OrderView extends Component {
   }
 
   show() {
+    this.onGetGeolocation();
     ImagePicker.showImagePicker(options, (response) => {
 
       if (response.didCancel) {
@@ -177,6 +200,8 @@ export default class OrderView extends Component {
         console.log('User tapped custom button: ', response.customButton);
       }
       else {
+        let latitude = this.state.latitude;
+        let longitude = this.state.longitude;
         let id = this.state.id;
         let photo = response.data;
         
@@ -191,6 +216,8 @@ export default class OrderView extends Component {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: JSON.stringify({
+            latitude: latitude,
+            longitude: longitude,
             id: id,
             photo: photo,
           }),
