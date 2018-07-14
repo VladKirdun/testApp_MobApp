@@ -98,7 +98,7 @@ export default class OrderView extends Component {
 
   onDelete() {
     var id = this.state.id;
-    fetch('http://192.168.96.128:3000/api/delete', {
+    fetch('http://192.168.1.104:3000/api/delete', {
       method: 'POST',
       headers: {
         Accept: 'application/x-www-form-urlencoded',
@@ -209,7 +209,7 @@ export default class OrderView extends Component {
           photo: photo
         });
 
-        fetch('http://192.168.96.128:3000/api/addPhoto', {
+        fetch('http://192.168.1.104:3000/api/addPhoto', {
           method: 'POST',
           headers: {
             Accept: 'application/x-www-form-urlencoded',

@@ -56,13 +56,13 @@ export default class OrdersList extends Component<{}> {
   constructor(props) {
     super(props);
     this.state = {
-      id: '',
+      address: '',
       data: '',
     };
   }
 
   componentWillMount() {
-    fetch('http://192.168.96.128:3000/api/')
+    fetch('http://192.168.1.104:3000/api/')
       .then((response) => {
         return response.json()
       })
@@ -83,12 +83,12 @@ export default class OrdersList extends Component<{}> {
   //     });
   // }
 
-  onChangeId(event) {
-    this.setState({id: event.nativeEvent.text})
+  onChangeAddress(event) {
+    this.setState({address: event.nativeEvent.text})
   }
 
   onSearchOrders() {
-    fetch('http://192.168.96.128:3000/api?id=' + this.state.id)
+    fetch('http://192.168.1.104:3000/api?address=' + this.state.address)
       .then((response) => {
         return response.json()
       })
@@ -121,9 +121,9 @@ export default class OrdersList extends Component<{}> {
       <View>
         <View style={styles.flowRight}>
           <TextInput 
-            style={styles.status} 
-            value={this.state.id} 
-            onChange={this.onChangeId.bind(this)}
+            style={styles.inputSearch} 
+            value={this.state.address} 
+            onChange={this.onChangeAddress.bind(this)}
           />
           <Button
             onPress={this.onSearchOrders.bind(this)}
@@ -146,8 +146,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'stretch',
-    marginTop: 5,
-    marginBottom: 5
+    margin: 5
   },
   container: {
     padding: 10,
@@ -174,4 +173,7 @@ const styles = StyleSheet.create({
     height: 30,
     marginLeft: 50
   },
+  inputSearch: {
+    width: 280
+  }
 });
